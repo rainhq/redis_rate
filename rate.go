@@ -2,6 +2,7 @@ package redis_rate
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -125,6 +126,8 @@ func (l *Limiter) AllowRate(name string, rateLimit rate.Limit) (delay time.Durat
 	count, err := l.incr(name, dur, 1)
 	if err == nil {
 		allow = count <= limit
+	} else {
+		log.Println("Increment encountered an error: ", err)
 	}
 
 	if !allow {
